@@ -40,6 +40,8 @@ def quitWindow():
 
 homeTeams = []
 awayTeams = []
+homePitchers = []
+awayPitchers = []
 def todaySchedule():
     schedule = statsapi.schedule(start_date=currentDate, end_date=currentDate)
     for haha in schedule:
@@ -48,11 +50,21 @@ def todaySchedule():
                 global homeTeams
                 theHomeTeam = haha[each2]
                 homeTeams.append(theHomeTeam)
+        for thing2 in haha:
+            if thing2 == 'home_probable_pitcher':
+                global homePitchers
+                theHomePitcher = haha[thing2]
+                homePitchers.append(theHomePitcher)
         for each3 in haha:
             if each3 == 'away_name':
                 global awayTeams
                 theAwayTeam = haha[each3]
                 awayTeams.append(theAwayTeam)
+        for thing3 in haha:
+            if thing3 == 'away_probable_pitcher':
+                global awayPitchers
+                theAwayPitcher = haha[thing3]
+                awayPitchers.append(theAwayPitcher)
         #print(f'{homeTeams} --> {awayTeams}')
 
 def todayStandings():
