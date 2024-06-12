@@ -19,8 +19,8 @@ tab2 = Frame(notebook)
 tab3 = Frame(notebook)
 
 notebook.add(tab1, text="Matchups")
-notebook.add(tab2, text="Standings")
-notebook.add(tab3, text="Stats")
+notebook.add(tab2, text="Stats")
+notebook.add(tab3, text="Standings")
 
 
 #time setup
@@ -323,9 +323,16 @@ for value, each in enumerate(awayTeams):
     print(value)
 
 #-----------------Standings-----------------
-
-swapDivs = customtkinter.CTkOptionMenu(master=tab3, state='readonly', values=["AL East", 'AL Central', 'AL West', 'NL East', 'NL Central', 'NL West'])
+divisions = ["AL East", 'AL Central', 'AL West', 'NL East', 'NL Central', 'NL West']
+var = StringVar()
+swapDivs = customtkinter.CTkComboBox(master=tab3, state='readonly', values=divisions, variable=var)
+swapDivs.set('Select Division')
+#customtkinter.CTkOptionMenu
+#swapDivs['values'] = divisions
+#swapDivs['state'] = 'readonly'
 swapDivs.grid(row=1, column=3, pady=10, padx=3)
+
+
 
 divTeams = customtkinter.CTkLabel(master=tab3, text="Teams")
 divTeams.grid(row=2, column=1, columnspan=2,pady=10, padx=3)
@@ -336,7 +343,7 @@ divLosses.grid(row=2, column=4, columnspan=1,pady=10, padx=3)
 divGbs = customtkinter.CTkLabel(master=tab3, text='Gb')
 divGbs.grid(row=2, column=5, columnspan=1,pady=10, padx=3)
 
-def swapAllStats():
+def swapAllStats(*args):
     currentDiv = swapDivs.get()
     print(currentDiv)
     if currentDiv == 'AL East':
@@ -353,6 +360,7 @@ def swapAllStats():
         drawNlWestStandings()
 
 def drawAlEastStandings():
+    
     for count, each in enumerate(aleTeamNames):
         team1 = customtkinter.CTkLabel(master=tab3, text=each)
         team1.grid(row=count + 3, column=1, columnspan=2, pady=10, padx=3)
@@ -455,7 +463,9 @@ def drawNlWestStandings():
         team1 = customtkinter.CTkLabel(master=tab3, text=each)
         team1.grid(row=count + 3, column=5, columnspan=1, pady=10, padx=3)
 
-swapAllStats()
+
+var.trace('w', swapAllStats)
+#swapAllStats()
 #swapDivs.bind("<<ComboboxSelected>>", swapAllStats())
 
 # for count, each in enumerate(aleTeamNames):
