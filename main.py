@@ -11,7 +11,7 @@ import notebook
 #basic tk setup
 window = customtkinter.CTk()
 window.title("The Score")
-window.geometry("600x600")
+window.geometry("600x700")
 
 notebook = ttk.Notebook(window)
 tab1 = Frame(notebook)
@@ -76,6 +76,7 @@ aleTeamNames = []
 aleTeamWins = []
 aleTeamLosses = []
 aleTeamGbs = []
+
 def alEastStandingsFunc():
     alEastStandings = statsapi.standings_data(leagueId="103", division="ale", include_wildcard=True, season=2024,
                                               standingsTypes=None, date=None)
@@ -301,26 +302,48 @@ def top5savesFunc():
         top5savesLeadersStats.append(each[3])
 top5savesFunc()
 
-#-----------------matchups-----------------
+def findTeam():
+    test = matchupButton.cget('text')
+    print(test)
 
+def viewMatchupFunc(t):
+    print(t)
+    if matchupButtons[0]:
+        print(homeTeamsMatchups[0])
+    elif matchupButtons[1]:
+        print(homeTeamsMatchups[1])
+    else:
+        pass
+#-----------------matchups-----------------
+matchupButtons = []
+homeTeamsMatchups = []
 dateLabel = Label(tab1, text=currentDate, fg='black', font=('arial', 20))
 dateLabel.grid(column=2, row=0)
 
-for count, each in enumerate(homeTeams):
-    homeTeamLabel = Label(tab1, text=each, fg='black', font=('arial', 20))
-    homeTeamLabel.grid(column=1, row=count + 1, pady=10, padx=3)
-    print(count)
-
-
-for amount, each in enumerate(homeTeams):
-    atLabel = Label(tab1, text='--->', fg='black', font=('arial', 20))
-    atLabel.grid(column=2, row=amount + 1, pady=10, padx=3)
-    print(count)
+for value, each in enumerate(awayTeams):
+    awayTeamLabel = customtkinter.CTkLabel(master=tab1, text=each)
+    awayTeamLabel.grid(column=1, row=value + 1, pady=10, padx=3)
+    print(value)
 
 for value, each in enumerate(awayTeams):
-    awayTeamLabel = Label(tab1, text=each, fg='black', font=('arial', 20))
-    awayTeamLabel.grid(column=3, row=value + 1, pady=10, padx=3)
+    atLabel = customtkinter.CTkLabel(master=tab1, text="@")
+    atLabel.grid(column=2, row=value + 1, pady=10, padx=3)
     print(value)
+
+for count, each in enumerate(homeTeams):
+    homeTeamLabel = customtkinter.CTkLabel(master=tab1, text=each)
+    homeTeamLabel.grid(column=3, row=count + 1, pady=10, padx=1)
+    tester = homeTeamLabel.cget('text')
+    homeTeamsMatchups.append(tester)
+    print(homeTeamsMatchups)
+
+for amount, each in enumerate(homeTeams):
+    #lambda t= "Button-2 Clicked": get_button(t)
+    matchupButton = customtkinter.CTkButton(master=tab1, text='View Matchup', command=lambda t=homeTeams[amount] : viewMatchupFunc(t))
+    matchupButton.grid(column=4, columnspan=2, row=amount + 1, pady=10, padx=5)
+    matchupButtons.append(matchupButton)
+    print(matchupButton)
+
 
 #-----------------Standings-----------------
 divisions = ["AL East", 'AL Central', 'AL West', 'NL East', 'NL Central', 'NL West']
@@ -360,7 +383,7 @@ def swapAllStats(*args):
         drawNlWestStandings()
 
 def drawAlEastStandings():
-    
+
     for count, each in enumerate(aleTeamNames):
         team1 = customtkinter.CTkLabel(master=tab3, text=each)
         team1.grid(row=count + 3, column=1, columnspan=2, pady=10, padx=3)
@@ -485,7 +508,7 @@ var.trace('w', swapAllStats)
 #     team1.grid(row=count + 3, column=5, columnspan=1, pady=10, padx=3)
 
 # add quit button
-quit_button = tk.Button(tab1, text='Quit', command=quitWindow).grid(row=10, column=2, sticky='n')
+#quit_button = tk.Button(tab1, text='Quit', command=quitWindow).grid(row=10, column=2, sticky='n')
 
 
 
