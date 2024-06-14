@@ -43,8 +43,9 @@ homeTeams = []
 awayTeams = []
 homePitchers = []
 awayPitchers = []
+schedule = statsapi.schedule(start_date=currentDate, end_date=currentDate)
 def todaySchedule():
-    schedule = statsapi.schedule(start_date=currentDate, end_date=currentDate)
+
     for haha in schedule:
         for each2 in haha:
             if each2 == 'home_name':
@@ -302,18 +303,55 @@ def top5savesFunc():
         top5savesLeadersStats.append(each[3])
 top5savesFunc()
 
+top = ""
+
+def open_popup():
+    global top
+    top = Toplevel(tab2)
+    top.geometry("550x300")
+    top.title("Child_Window")
+    #window.withdraw()
+
 def findTeam():
     test = matchupButton.cget('text')
     print(test)
-
+#print(schedule)
+tester19 = []
 def viewMatchupFunc(t):
-    print(t)
+    open_popup()
+    #print(t)
     if matchupButtons[0]:
-        print(homeTeamsMatchups[0])
+        #print(t)
+        teamName = t
+        sched = statsapi.schedule(start_date=currentDate, end_date=currentDate)
+
+        print(sched)
+        # for each in schedule:
+        #     for each2 in each:
+        #         if each2 == 'home_name':
+        #             global tester19
+        #             tester19.append(each[each2])
+        #             print(tester19)
+        for each in homeTeams:
+            if each == teamName:
+                childWindowLabelHome = customtkinter.CTkLabel(master=top, text=t)
+                childWindowLabelHome.grid(row=1, column=3)
+                #print(teamName)
+        for each in awayTeams:
+            if each == teamName:
+                childWindowLabelHome = customtkinter.CTkLabel(master=top, text=t)
+                childWindowLabelHome.grid(row=1, column=3)
+                #print(teamName)
     elif matchupButtons[1]:
-        print(homeTeamsMatchups[1])
+        teamName = t
+        for each in homeTeams:
+            if each == teamName:
+                childWindowLabelHome = customtkinter.CTkLabel(master=top, text=t)
+                childWindowLabelHome.grid(row=0, column=0)
+                #print(teamName)
     else:
         pass
+#print(tester19)
 #-----------------matchups-----------------
 matchupButtons = []
 homeTeamsMatchups = []
@@ -333,8 +371,8 @@ for value, each in enumerate(awayTeams):
 for count, each in enumerate(homeTeams):
     homeTeamLabel = customtkinter.CTkLabel(master=tab1, text=each)
     homeTeamLabel.grid(column=3, row=count + 1, pady=10, padx=1)
-    tester = homeTeamLabel.cget('text')
-    homeTeamsMatchups.append(tester)
+    eachTeam = homeTeamLabel.cget('text')
+    homeTeamsMatchups.append(eachTeam)
     print(homeTeamsMatchups)
 
 for amount, each in enumerate(homeTeams):
