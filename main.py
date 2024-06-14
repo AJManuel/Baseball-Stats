@@ -11,7 +11,7 @@ import notebook
 #basic tk setup
 window = customtkinter.CTk()
 window.title("The Score")
-window.geometry("600x700")
+window.geometry("600x850")
 
 notebook = ttk.Notebook(window)
 tab1 = Frame(notebook)
@@ -38,11 +38,18 @@ def quitWindow():
     window.destroy()
     sys.exit(0)
     print("uncomment the destroy method and exit method statements above, then delete this print statement...")
-
+boxScore = statsapi.boxscore_data(gamePk='123')
+print(boxScore)
+print("---")
+for each in boxScore:
+    print(boxScore[each][2])
+    print("----")
 homeTeams = []
 awayTeams = []
 homePitchers = []
 awayPitchers = []
+homeScores = []
+awayScores = []
 schedule = statsapi.schedule(start_date=currentDate, end_date=currentDate)
 def todaySchedule():
 
@@ -57,6 +64,11 @@ def todaySchedule():
                 global homePitchers
                 theHomePitcher = haha[thing2]
                 homePitchers.append(theHomePitcher)
+        for thing4 in haha:
+            if thing4 == 'home_score':
+                global homeScores
+                theHomeScore = haha[thing4]
+                homeScores.append(theHomeScore)
         for each3 in haha:
             if each3 == 'away_name':
                 global awayTeams
@@ -67,6 +79,11 @@ def todaySchedule():
                 global awayPitchers
                 theAwayPitcher = haha[thing3]
                 awayPitchers.append(theAwayPitcher)
+        for thing4 in haha:
+            if thing4 == 'away_score':
+                global awayScores
+                theAwayScore = haha[thing4]
+                awayScores.append(theAwayScore)
         #print(f'{homeTeams} --> {awayTeams}')
 
 todaySchedule()
@@ -319,36 +336,55 @@ def findTeam():
 tester19 = []
 def viewMatchupFunc(t):
     open_popup()
+    global awayTeams
     #print(t)
     if matchupButtons[0]:
         #print(t)
         teamName = t
         sched = statsapi.schedule(start_date=currentDate, end_date=currentDate)
 
-        print(sched)
+        #print(sched)
         # for each in schedule:
         #     for each2 in each:
         #         if each2 == 'home_name':
         #             global tester19
         #             tester19.append(each[each2])
         #             print(tester19)
-        for each in homeTeams:
+        for count, each in enumerate(homeTeams):
             if each == teamName:
                 childWindowLabelHome = customtkinter.CTkLabel(master=top, text=t)
                 childWindowLabelHome.grid(row=1, column=3)
+
+                childWindowProbablePitcherHome = customtkinter.CTkLabel(master=top, text=homePitchers[count])
+                childWindowProbablePitcherHome.grid(row=2, column=3)
+                if homePitchers[count] == '':
+                    childWindowProbablePitcherHome.configure(text='TBD')
+
+                childWindowHomeScore = customtkinter.CTkLabel(master=top, text=homeScores[count])
+                childWindowHomeScore.grid(row=3, column=3)
                 #print(teamName)
-        for each in awayTeams:
-            if each == teamName:
-                childWindowLabelHome = customtkinter.CTkLabel(master=top, text=t)
-                childWindowLabelHome.grid(row=1, column=3)
+                childWindowLabelAway = customtkinter.CTkLabel(master=top, text=awayTeams[count])
+                childWindowLabelAway.grid(row=1, column=1)
+
+                childWindowProbablePitcherAway = customtkinter.CTkLabel(master=top, text=awayPitchers[count])
+                childWindowProbablePitcherAway.grid(row=2, column=1)
+                if awayPitchers[count] == '':
+                    childWindowProbablePitcherAway.configure(text='TBD')
+
+                childWindowAwayScore = customtkinter.CTkLabel(master=top, text=awayScores[count])
+                childWindowAwayScore.grid(row=3, column=1)
                 #print(teamName)
     elif matchupButtons[1]:
+        print('er')
         teamName = t
         for each in homeTeams:
             if each == teamName:
+                print('ere')
                 childWindowLabelHome = customtkinter.CTkLabel(master=top, text=t)
                 childWindowLabelHome.grid(row=0, column=0)
                 #print(teamName)
+                childWindowLabelAway = customtkinter.CTkLabel(master=top, text=awayTeams[1])
+                childWindowLabelAway.grid(row=1, column=1)
     else:
         pass
 #print(tester19)
@@ -361,26 +397,26 @@ dateLabel.grid(column=2, row=0)
 for value, each in enumerate(awayTeams):
     awayTeamLabel = customtkinter.CTkLabel(master=tab1, text=each)
     awayTeamLabel.grid(column=1, row=value + 1, pady=10, padx=3)
-    print(value)
+    #print(value)
 
 for value, each in enumerate(awayTeams):
     atLabel = customtkinter.CTkLabel(master=tab1, text="@")
     atLabel.grid(column=2, row=value + 1, pady=10, padx=3)
-    print(value)
+    #print(value)
 
 for count, each in enumerate(homeTeams):
     homeTeamLabel = customtkinter.CTkLabel(master=tab1, text=each)
     homeTeamLabel.grid(column=3, row=count + 1, pady=10, padx=1)
     eachTeam = homeTeamLabel.cget('text')
     homeTeamsMatchups.append(eachTeam)
-    print(homeTeamsMatchups)
+    #print(homeTeamsMatchups)
 
 for amount, each in enumerate(homeTeams):
     #lambda t= "Button-2 Clicked": get_button(t)
     matchupButton = customtkinter.CTkButton(master=tab1, text='View Matchup', command=lambda t=homeTeams[amount] : viewMatchupFunc(t))
     matchupButton.grid(column=4, columnspan=2, row=amount + 1, pady=10, padx=5)
     matchupButtons.append(matchupButton)
-    print(matchupButton)
+    #print(matchupButton)
 
 
 #-----------------Standings-----------------
@@ -392,7 +428,6 @@ swapDivs.set('Select Division')
 #swapDivs['values'] = divisions
 #swapDivs['state'] = 'readonly'
 swapDivs.grid(row=1, column=3, pady=10, padx=3)
-
 
 
 divTeams = customtkinter.CTkLabel(master=tab3, text="Teams")
