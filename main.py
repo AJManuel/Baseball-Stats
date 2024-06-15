@@ -38,22 +38,38 @@ def quitWindow():
     window.destroy()
     sys.exit(0)
     print("uncomment the destroy method and exit method statements above, then delete this print statement...")
-boxScore = statsapi.boxscore_data(gamePk='123')
-print(boxScore)
-print("---")
-for each in boxScore:
-    print(boxScore[each][2])
-    print("----")
+# boxScore = statsapi.boxscore_data(gamePk='1233')
+# print(boxScore)
+# print("---")
+# x = []
+# for each in boxScore:
+#     x.append(boxScore[each])
+#     print("----")
+# for each in x[2]:
+#     for each2 in x[2][each]:
+#         if each2 == 'fullname':
+#             print(each2)
+    #print(x[2][each])
+#print(x[2])
 homeTeams = []
 awayTeams = []
 homePitchers = []
 awayPitchers = []
 homeScores = []
 awayScores = []
+homeRoster = []
+homeTeamId = []
+awayTeamId = []
+gameIds = []
 schedule = statsapi.schedule(start_date=currentDate, end_date=currentDate)
+print(schedule)
 def todaySchedule():
-
     for haha in schedule:
+        for each7 in haha:
+            if each7 == 'game_id':
+                global gameIds
+                theGameIds = haha[each7]
+                gameIds.append(theGameIds)
         for each2 in haha:
             if each2 == 'home_name':
                 global homeTeams
@@ -69,6 +85,11 @@ def todaySchedule():
                 global homeScores
                 theHomeScore = haha[thing4]
                 homeScores.append(theHomeScore)
+        for thing5 in haha:
+            if thing5 == 'home_id':
+                global homeTeamId
+                theHomeTeamId = haha[thing5]
+                homeTeamId.append(theHomeTeamId)
         for each3 in haha:
             if each3 == 'away_name':
                 global awayTeams
@@ -84,6 +105,11 @@ def todaySchedule():
                 global awayScores
                 theAwayScore = haha[thing4]
                 awayScores.append(theAwayScore)
+        for thing6 in haha:
+            if thing6 == 'away_id':
+                global awayTeamId
+                theAwayTeamId = haha[thing6]
+                awayTeamId.append(theAwayTeamId)
         #print(f'{homeTeams} --> {awayTeams}')
 
 todaySchedule()
@@ -341,16 +367,31 @@ def viewMatchupFunc(t):
     if matchupButtons[0]:
         #print(t)
         teamName = t
-        sched = statsapi.schedule(start_date=currentDate, end_date=currentDate)
+        homeRoster = statsapi.roster(teamId=homeTeamId[0], season=2024, date=currentDate)
+        awayRoster = statsapi.roster(teamId=awayTeamId[0], season=2024, date=currentDate)
 
-        #print(sched)
-        # for each in schedule:
-        #     for each2 in each:
-        #         if each2 == 'home_name':
-        #             global tester19
-        #             tester19.append(each[each2])
-        #             print(tester19)
+
         for count, each in enumerate(homeTeams):
+            schedule = statsapi.schedule(sportId=1)
+            games = [game['game_id'] for game in schedule]
+            params = {
+                "sportId": 1,
+                "gamePk": gameIds[count],
+                "hydrate": "lineups",
+            }
+            gamedata = statsapi.get("schedule", params)
+            teamdata = gamedata['dates'][0]['games'][0]['lineups']
+            lineups = {}
+            home = []
+            away = []
+            for player in teamdata['homePlayers']:
+                name = player['fullName']
+                home.append(name)
+            lineups['home'] = home
+            for player in teamdata['awayPlayers']:
+                name = player['fullName']
+                away.append(name)
+            lineups['away'] = away
             if each == teamName:
                 childWindowLabelHome = customtkinter.CTkLabel(master=top, text=t)
                 childWindowLabelHome.grid(row=1, column=3)
@@ -362,6 +403,10 @@ def viewMatchupFunc(t):
 
                 childWindowHomeScore = customtkinter.CTkLabel(master=top, text=homeScores[count])
                 childWindowHomeScore.grid(row=3, column=3)
+
+                for num in range(len(home)):
+                    childWindowHomeRoster = customtkinter.CTkLabel(master=top, text=f'{num + 1}. {home[0 + num]}')
+                    childWindowHomeRoster.grid(row=4 + num, column=3)
                 #print(teamName)
                 childWindowLabelAway = customtkinter.CTkLabel(master=top, text=awayTeams[count])
                 childWindowLabelAway.grid(row=1, column=1)
@@ -373,9 +418,15 @@ def viewMatchupFunc(t):
 
                 childWindowAwayScore = customtkinter.CTkLabel(master=top, text=awayScores[count])
                 childWindowAwayScore.grid(row=3, column=1)
+
+                for num in range(len(away)):
+                    childWindowAwayRoster = customtkinter.CTkLabel(master=top, text=f'{num + 1}. {away[0 + num]}')
+                    childWindowAwayRoster.grid(row=4 + num, column=1)
                 #print(teamName)
     elif matchupButtons[1]:
         print('er')
+        homeRoster = statsapi.roster(teamId=homeTeamId[1], season=2024, date=currentDate)
+        awayRoster = statsapi.roster(teamId=awayTeamId[1], season=2024, date=currentDate)
         teamName = t
         for each in homeTeams:
             if each == teamName:
