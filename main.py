@@ -11,8 +11,17 @@ import notebook
 
 #basic tk setup
 window = customtkinter.CTk()
+
 window.title("The Score")
-window.geometry("600x850")
+
+window.geometry("700x700")
+
+#window.resizable(0,0)
+
+customtkinter.set_appearance_mode("Light")
+customtkinter.set_default_color_theme("green")
+
+
 
 notebook = ttk.Notebook(window)
 tab1 = Frame(notebook)
@@ -30,28 +39,8 @@ currentDate = (f'{today.month}/{today.day}/{today.year}')
 print(currentDate)
 tomorrow = today + datetime.timedelta(days=1)
 
-#-----------------api variables-----------------
-
 
 #-----------------functions-----------------
-# quit function
-def quitWindow():
-    window.destroy()
-    sys.exit(0)
-    print("uncomment the destroy method and exit method statements above, then delete this print statement...")
-# boxScore = statsapi.boxscore_data(gamePk='1233')
-# print(boxScore)
-# print("---")
-# x = []
-# for each in boxScore:
-#     x.append(boxScore[each])
-#     print("----")
-# for each in x[2]:
-#     for each2 in x[2][each]:
-#         if each2 == 'fullname':
-#             print(each2)
-    #print(x[2][each])
-#print(x[2])
 homeTeams = []
 awayTeams = []
 homePitchers = []
@@ -516,17 +505,29 @@ def viewMatchupFunc(t):
             }
             gamedata = statsapi.get("schedule", params)
             teamdata = gamedata['dates'][0]['games'][0]['lineups']
+            print(teamdata)
+            print('herer')
             lineups = {}
             home = []
             away = []
-            for player in teamdata['homePlayers']:
-                name = player['fullName']
-                home.append(name)
-            lineups['home'] = home
-            for player in teamdata['awayPlayers']:
-                name = player['fullName']
-                away.append(name)
-            lineups['away'] = away
+            if len(teamdata) == 0:
+                 pass
+            elif len(teamdata) != 0:
+                for player in teamdata['homePlayers']:
+                    name = player['fullName']
+                    home.append(name)
+                lineups['home'] = home
+
+            if len(teamdata) == 0:
+                pass
+            elif len(teamdata) != 0:
+                if teamdata['awayPlayers'] != '':
+                    for player in teamdata['awayPlayers']:
+                        name = player['fullName']
+                        away.append(name)
+                    lineups['away'] = away
+
+
             if each == teamName:
                 childWindowLabelHome = customtkinter.CTkLabel(master=top, text=t)
                 childWindowLabelHome.grid(row=1, column=3)
@@ -536,7 +537,8 @@ def viewMatchupFunc(t):
                 if homePitchers[count] == '':
                     childWindowProbablePitcherHome.configure(text='TBD')
 
-                childWindowHomeScore = customtkinter.CTkLabel(master=top, text=homeScores[count])
+                scoreFont = ('arial', 25, 'bold')
+                childWindowHomeScore = customtkinter.CTkLabel(master=top, text=homeScores[count], font=scoreFont)
                 childWindowHomeScore.grid(row=3, column=3)
 
                 for num in range(len(home)):
@@ -551,7 +553,7 @@ def viewMatchupFunc(t):
                 if awayPitchers[count] == '':
                     childWindowProbablePitcherAway.configure(text='TBD')
 
-                childWindowAwayScore = customtkinter.CTkLabel(master=top, text=awayScores[count])
+                childWindowAwayScore = customtkinter.CTkLabel(master=top, text=awayScores[count], font=scoreFont)
                 childWindowAwayScore.grid(row=3, column=1)
 
                 for num in range(len(away)):
@@ -575,7 +577,7 @@ def viewMatchupFunc(t):
 #-----------------matchups-----------------
 matchupButtons = []
 homeTeamsMatchups = []
-dateLabel = Label(tab1, text=currentDate, fg='black', font=('arial', 20))
+dateLabel = customtkinter.CTkLabel(tab1, text=currentDate)
 dateLabel.grid(column=2, row=0)
 
 for value, each in enumerate(awayTeams):
@@ -882,22 +884,6 @@ for count, each in enumerate(aleTeamGbs):
 #swapAllStats()
 #swapDivs.bind("<<ComboboxSelected>>", swapAllStats())
 
-# for count, each in enumerate(aleTeamNames):
-#     team1 = customtkinter.CTkLabel(master=tab3, text=each)
-#     team1.grid(row=count + 3, column=1, columnspan=2, pady=10, padx=3)
-#
-# for count, each in enumerate(aleTeamWins):
-#     team1 = customtkinter.CTkLabel(master=tab3, text=each)
-#     team1.grid(row=count + 3, column=3, columnspan=1, pady=10, padx=3)
-#
-# for count, each in enumerate(aleTeamLosses):
-#     team1 = customtkinter.CTkLabel(master=tab3, text=each)
-#     team1.grid(row=count + 3, column=4, columnspan=1, pady=10, padx=3)
-#
-# for count, each in enumerate(aleTeamGbs):
-#     team1 = customtkinter.CTkLabel(master=tab3, text=each)
-#     team1.grid(row=count + 3, column=5, columnspan=1, pady=10, padx=3)
-
 # add quit button
 #quit_button = tk.Button(tab1, text='Quit', command=quitWindow).grid(row=10, column=2, sticky='n')
 
@@ -906,4 +892,5 @@ for count, each in enumerate(aleTeamGbs):
 
 # start the GUI --> Leave here at the end!
 notebook.pack()
+
 window.mainloop()
