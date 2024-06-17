@@ -1,3 +1,4 @@
+import tkinter
 from tkinter import *
 import tkinter as tk
 from tkinter import ttk
@@ -348,6 +349,150 @@ top5savesFunc()
 
 top = ""
 
+#----------------Leaders Page----------------
+statistics = ['AVG', 'OPS', 'RUNS', 'RBI', 'HR', 'WINS', 'ERA', 'SAVES']
+swapStatBox = customtkinter.CTkComboBox(master=tab2, state='readonly', values=statistics)
+swapStatBox.grid(row=0, column=0)
+
+leadersNamesLabel = customtkinter.CTkLabel(master=tab2, text='Name')
+leadersNamesLabel.grid(row=1, column=0, columnspan=2)
+
+LeadersStatLabel = customtkinter.CTkLabel(master=tab2, text='Stat')
+LeadersStatLabel.grid(row=1, column=3)
+
+allPlayerNames = []
+for count, each in enumerate(top5averageLeadersNames):
+    player1 = customtkinter.CTkLabel(master=tab2, text=each)
+    player1.grid(row=count + 3, column=0, columnspan=2, pady=10, padx=3)
+    allPlayerNames.append(player1)
+
+allPlayerStats = []
+for count, each in enumerate(top5averageLeadersStats):
+    stats1 = customtkinter.CTkLabel(master=tab2, text=each)
+    stats1.grid(row=count + 3, column=3, columnspan=1, pady=10, padx=3)
+    allPlayerStats.append(stats1)
+
+def drawAverageStats():
+    global top5averageLeadersNames
+    global top5averageLeadersStats
+    global allPlayerStats
+    global allPlayerNames
+
+    for count, each in enumerate(top5averageLeadersNames):
+        allPlayerNames[count].configure(text=each)
+
+    for count, each in enumerate(top5averageLeadersStats):
+        allPlayerStats[count].configure(text=each)
+
+def drawOpsStats():
+    global top5opsLeadersNames
+    global top5opsLeadersStats
+    global allPlayerStats
+    global allPlayerNames
+
+    for count, each in enumerate(top5opsLeadersNames):
+        allPlayerNames[count].configure(text=each)
+
+    for count, each in enumerate(top5opsLeadersStats):
+        allPlayerStats[count].configure(text=each)
+
+def drawRunsStats():
+    global top5runsLeadersNames
+    global top5runsLeadersStats
+    global allPlayerStats
+    global allPlayerNames
+
+    for count, each in enumerate(top5runsLeadersNames):
+        allPlayerNames[count].configure(text=each)
+
+    for count, each in enumerate(top5runsLeadersStats):
+        allPlayerStats[count].configure(text=each)
+
+def drawRbisStats():
+    global top5rbiLeadersNames
+    global top5rbiLeadersStats
+    global allPlayerStats
+    global allPlayerNames
+
+    for count, each in enumerate(top5rbiLeadersNames):
+        allPlayerNames[count].configure(text=each)
+
+    for count, each in enumerate(top5rbiLeadersStats):
+        allPlayerStats[count].configure(text=each)
+
+def drawHrsStats():
+    global top5hrLeadersNames
+    global top5hrLeadersStats
+    global allPlayerStats
+    global allPlayerNames
+
+    for count, each in enumerate(top5hrLeadersNames):
+        allPlayerNames[count].configure(text=each)
+
+    for count, each in enumerate(top5hrLeadersStats):
+        allPlayerStats[count].configure(text=each)
+
+def drawWinsStats():
+    global top5winsLeadersNames
+    global top5winsLeadersStats
+    global allPlayerStats
+    global allPlayerNames
+
+    for count, each in enumerate(top5winsLeadersNames):
+        allPlayerNames[count].configure(text=each)
+
+    for count, each in enumerate(top5winsLeadersStats):
+        allPlayerStats[count].configure(text=each)
+
+def drawEraStats():
+    global top5eraLeadersNames
+    global top5eraLeadersStats
+    global allPlayerStats
+    global allPlayerNames
+
+    for count, each in enumerate(top5eraLeadersNames):
+        allPlayerNames[count].configure(text=each)
+
+    for count, each in enumerate(top5eraLeadersStats):
+        allPlayerStats[count].configure(text=each)
+
+def drawSavesStats():
+    global top5savesLeadersNames
+    global top5savesLeadersStats
+    global allPlayerStats
+    global allPlayerNames
+
+    for count, each in enumerate(top5savesLeadersNames):
+        allPlayerNames[count].configure(text=each)
+
+    for count, each in enumerate(top5savesLeadersStats):
+        allPlayerStats[count].configure(text=each)
+
+def swapAllNumbers():
+    currentStat = swapStatBox.get()
+    print(currentStat)
+    if currentStat == 'AVG':
+        drawAverageStats()
+    elif currentStat == 'OPS':
+        drawOpsStats()
+    elif currentStat == 'RUNS':
+        drawRunsStats()
+    elif currentStat == 'RBI':
+        drawRbisStats()
+    elif currentStat == 'HR':
+        drawHrsStats()
+    elif currentStat == 'WINS':
+        drawWinsStats()
+    elif currentStat == 'ERA':
+        drawEraStats()
+    elif currentStat == 'SAVES':
+        drawSavesStats()
+    else:
+        pass
+
+changeStatButton = customtkinter.CTkButton(master=tab2, text='Update', command=swapAllNumbers)
+changeStatButton.grid(row=8, column=1, columnspan=2, pady=10, padx=3)
+
 def open_popup():
     global top
     top = Toplevel(tab2)
@@ -456,6 +601,8 @@ for amount, each in enumerate(homeTeams):
     matchupButton.grid(column=4, columnspan=2, row=amount + 1, pady=10, padx=5)
     matchupButtons.append(matchupButton)
     #print(matchupButton)
+
+
 
 
 #-----------------Standings-----------------
@@ -705,7 +852,7 @@ def swapAllStats():
         pass
 
 changeDivButton = customtkinter.CTkButton(master=tab3, text='Update', command=swapAllStats)
-changeDivButton.grid(row=8, column=1, columnspan=2, pady=10, padx=3)
+changeDivButton.grid(row=8, column=2, columnspan=2, pady=10, padx=3)
 
 allTeamLabels = []
 for count, each in enumerate(aleTeamNames):
