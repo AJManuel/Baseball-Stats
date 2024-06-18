@@ -2,6 +2,7 @@ import tkinter
 from tkinter import *
 import tkinter as tk
 from tkinter import ttk
+from tkinter import font
 import customtkinter
 import requests
 import statsapi
@@ -18,10 +19,11 @@ window.geometry("700x700")
 
 #window.resizable(0,0)
 
-customtkinter.set_appearance_mode("Light")
+customtkinter.set_appearance_mode("Dark")
 customtkinter.set_default_color_theme("green")
 
-
+x = font.families()
+print(x)
 
 notebook = ttk.Notebook(window)
 tab1 = Frame(notebook)
@@ -32,6 +34,8 @@ notebook.add(tab1, text="Matchups")
 notebook.add(tab2, text="Stats")
 notebook.add(tab3, text="Standings")
 
+customtkinter.deactivate_automatic_dpi_awareness()
+
 
 #time setup
 today = datetime.date.today()
@@ -40,6 +44,8 @@ print(currentDate)
 tomorrow = today + datetime.timedelta(days=1)
 
 
+basicFont = ('Comic Sans MS', 16)
+bolderFont = ('Comic Sans MS', 25, 'bold')
 #-----------------functions-----------------
 homeTeams = []
 awayTeams = []
@@ -343,10 +349,10 @@ statistics = ['AVG', 'OPS', 'RUNS', 'RBI', 'HR', 'WINS', 'ERA', 'SAVES']
 swapStatBox = customtkinter.CTkComboBox(master=tab2, state='readonly', values=statistics)
 swapStatBox.grid(row=0, column=0)
 
-leadersNamesLabel = customtkinter.CTkLabel(master=tab2, text='Name')
+leadersNamesLabel = customtkinter.CTkLabel(master=tab2, text='Name', font=basicFont)
 leadersNamesLabel.grid(row=1, column=0, columnspan=2)
 
-LeadersStatLabel = customtkinter.CTkLabel(master=tab2, text='Stat')
+LeadersStatLabel = customtkinter.CTkLabel(master=tab2, text='Stat', font=basicFont)
 LeadersStatLabel.grid(row=1, column=3)
 
 allPlayerNames = []
@@ -479,7 +485,7 @@ def swapAllNumbers():
     else:
         pass
 
-changeStatButton = customtkinter.CTkButton(master=tab2, text='Update', command=swapAllNumbers)
+changeStatButton = customtkinter.CTkButton(master=tab2, text='Update', command=swapAllNumbers, font=basicFont)
 changeStatButton.grid(row=8, column=1, columnspan=2, pady=10, padx=3)
 
 def open_popup():
@@ -505,8 +511,6 @@ def viewMatchupFunc(t):
             }
             gamedata = statsapi.get("schedule", params)
             teamdata = gamedata['dates'][0]['games'][0]['lineups']
-            print(teamdata)
-            print('herer')
             lineups = {}
             home = []
             away = []
@@ -529,35 +533,35 @@ def viewMatchupFunc(t):
 
 
             if each == teamName:
-                childWindowLabelHome = customtkinter.CTkLabel(master=top, text=t)
+                childWindowLabelHome = customtkinter.CTkLabel(master=top, text=t, font=basicFont)
                 childWindowLabelHome.grid(row=1, column=3)
 
-                childWindowProbablePitcherHome = customtkinter.CTkLabel(master=top, text=homePitchers[count])
+                childWindowProbablePitcherHome = customtkinter.CTkLabel(master=top, text=homePitchers[count], font=basicFont)
                 childWindowProbablePitcherHome.grid(row=2, column=3)
                 if homePitchers[count] == '':
                     childWindowProbablePitcherHome.configure(text='TBD')
 
-                scoreFont = ('arial', 25, 'bold')
-                childWindowHomeScore = customtkinter.CTkLabel(master=top, text=homeScores[count], font=scoreFont)
+
+                childWindowHomeScore = customtkinter.CTkLabel(master=top, text=homeScores[count], font=bolderFont)
                 childWindowHomeScore.grid(row=3, column=3)
 
                 for num in range(len(home)):
-                    childWindowHomeRoster = customtkinter.CTkLabel(master=top, text=f'{num + 1}. {home[0 + num]}')
+                    childWindowHomeRoster = customtkinter.CTkLabel(master=top, font=basicFont, text=f'{num + 1}. {home[0 + num]}')
                     childWindowHomeRoster.grid(row=4 + num, column=3)
                 #print(teamName)
-                childWindowLabelAway = customtkinter.CTkLabel(master=top, text=awayTeams[count])
+                childWindowLabelAway = customtkinter.CTkLabel(master=top, text=awayTeams[count], font=basicFont)
                 childWindowLabelAway.grid(row=1, column=1)
 
-                childWindowProbablePitcherAway = customtkinter.CTkLabel(master=top, text=awayPitchers[count])
+                childWindowProbablePitcherAway = customtkinter.CTkLabel(master=top, text=awayPitchers[count], font=basicFont)
                 childWindowProbablePitcherAway.grid(row=2, column=1)
                 if awayPitchers[count] == '':
                     childWindowProbablePitcherAway.configure(text='TBD')
 
-                childWindowAwayScore = customtkinter.CTkLabel(master=top, text=awayScores[count], font=scoreFont)
+                childWindowAwayScore = customtkinter.CTkLabel(master=top, text=awayScores[count], font=bolderFont)
                 childWindowAwayScore.grid(row=3, column=1)
 
                 for num in range(len(away)):
-                    childWindowAwayRoster = customtkinter.CTkLabel(master=top, text=f'{num + 1}. {away[0 + num]}')
+                    childWindowAwayRoster = customtkinter.CTkLabel(master=top, font=basicFont, text=f'{num + 1}. {away[0 + num]}')
                     childWindowAwayRoster.grid(row=4 + num, column=1)
                 #print(teamName)
     elif matchupButtons[1]:
@@ -566,10 +570,10 @@ def viewMatchupFunc(t):
         teamName = t
         for each in homeTeams:
             if each == teamName:
-                childWindowLabelHome = customtkinter.CTkLabel(master=top, text=t)
+                childWindowLabelHome = customtkinter.CTkLabel(master=top, font=basicFont, text=t)
                 childWindowLabelHome.grid(row=0, column=0)
                 #print(teamName)
-                childWindowLabelAway = customtkinter.CTkLabel(master=top, text=awayTeams[1])
+                childWindowLabelAway = customtkinter.CTkLabel(master=top, font=basicFont, text=awayTeams[1])
                 childWindowLabelAway.grid(row=1, column=1)
     else:
         pass
@@ -577,21 +581,21 @@ def viewMatchupFunc(t):
 #-----------------matchups-----------------
 matchupButtons = []
 homeTeamsMatchups = []
-dateLabel = customtkinter.CTkLabel(tab1, text=currentDate)
+dateLabel = customtkinter.CTkLabel(tab1, text=currentDate, font=bolderFont)
 dateLabel.grid(column=2, row=0)
 
 for value, each in enumerate(awayTeams):
-    awayTeamLabel = customtkinter.CTkLabel(master=tab1, text=each)
+    awayTeamLabel = customtkinter.CTkLabel(master=tab1, text=each, font=basicFont)
     awayTeamLabel.grid(column=1, row=value + 1, pady=10, padx=3)
     #print(value)
 
 for value, each in enumerate(awayTeams):
-    atLabel = customtkinter.CTkLabel(master=tab1, text="@")
+    atLabel = customtkinter.CTkLabel(master=tab1, text="@", font=basicFont)
     atLabel.grid(column=2, row=value + 1, pady=10, padx=3)
     #print(value)
 
 for count, each in enumerate(homeTeams):
-    homeTeamLabel = customtkinter.CTkLabel(master=tab1, text=each)
+    homeTeamLabel = customtkinter.CTkLabel(master=tab1, text=each, font=basicFont)
     homeTeamLabel.grid(column=3, row=count + 1, pady=10, padx=1)
     eachTeam = homeTeamLabel.cget('text')
     homeTeamsMatchups.append(eachTeam)
@@ -599,7 +603,7 @@ for count, each in enumerate(homeTeams):
 
 for amount, each in enumerate(homeTeams):
     #lambda t= "Button-2 Clicked": get_button(t)
-    matchupButton = customtkinter.CTkButton(master=tab1, text='View Matchup', command=lambda t=homeTeams[amount] : viewMatchupFunc(t))
+    matchupButton = customtkinter.CTkButton(master=tab1, font=basicFont, text='View Matchup', command=lambda t=homeTeams[amount] : viewMatchupFunc(t))
     matchupButton.grid(column=4, columnspan=2, row=amount + 1, pady=10, padx=5)
     matchupButtons.append(matchupButton)
     #print(matchupButton)
@@ -611,19 +615,19 @@ for amount, each in enumerate(homeTeams):
 divisions = ["AL East", 'AL Central', 'AL West', 'NL East', 'NL Central', 'NL West']
 #var = StringVar()
 # swapDivs = customtkinter.CTkComboBox(master=tab3, state='readonly', values=divisions, variable=var)
-swapDivs = customtkinter.CTkComboBox(master=tab3, state='readonly', values=divisions)
+swapDivs = customtkinter.CTkComboBox(master=tab3, state='readonly', values=divisions, font=basicFont)
 
 # swapDivs.set('AL East')
 swapDivs.grid(row=1, column=3, pady=10, padx=3)
 
 
-divTeams = customtkinter.CTkLabel(master=tab3, text="Teams")
+divTeams = customtkinter.CTkLabel(master=tab3, text="Teams", font=basicFont)
 divTeams.grid(row=2, column=1, columnspan=2,pady=10, padx=3)
-divWins = customtkinter.CTkLabel(master=tab3, text='W')
+divWins = customtkinter.CTkLabel(master=tab3, text='W', font=basicFont)
 divWins.grid(row=2, column=3, columnspan=1,pady=10, padx=3)
-divLosses = customtkinter.CTkLabel(master=tab3, text='L')
+divLosses = customtkinter.CTkLabel(master=tab3, text='L', font=basicFont)
 divLosses.grid(row=2, column=4, columnspan=1,pady=10, padx=3)
-divGbs = customtkinter.CTkLabel(master=tab3, text='Gb')
+divGbs = customtkinter.CTkLabel(master=tab3, text='Gb', font=basicFont)
 divGbs.grid(row=2, column=5, columnspan=1,pady=10, padx=3)
 
 def drawAlEastStandings():
@@ -837,10 +841,8 @@ def swapAllStats():
     currentDiv = swapDivs.get()
     print(currentDiv)
     if currentDiv == 'AL East':
-        print('work')
         drawAlEastStandings()
     elif currentDiv == 'AL Central':
-        print('working')
         drawAlCentralStandings()
     elif currentDiv == 'AL West':
         drawAlWestStandings()
@@ -853,30 +855,30 @@ def swapAllStats():
     else:
         pass
 
-changeDivButton = customtkinter.CTkButton(master=tab3, text='Update', command=swapAllStats)
+changeDivButton = customtkinter.CTkButton(master=tab3, text='Update', command=swapAllStats, font=basicFont)
 changeDivButton.grid(row=8, column=2, columnspan=2, pady=10, padx=3)
 
 allTeamLabels = []
 for count, each in enumerate(aleTeamNames):
-    team1 = customtkinter.CTkLabel(master=tab3, text=each)
+    team1 = customtkinter.CTkLabel(master=tab3, text=each, font=basicFont)
     team1.grid(row=count + 3, column=1, columnspan=2, pady=10, padx=3)
     allTeamLabels.append(team1)
 
 allTeamWinsLabels = []
 for count, each in enumerate(aleTeamWins):
-    wins1 = customtkinter.CTkLabel(master=tab3, text=each)
+    wins1 = customtkinter.CTkLabel(master=tab3, text=each, font=basicFont)
     wins1.grid(row=count + 3, column=3, columnspan=1, pady=10, padx=3)
     allTeamWinsLabels.append(wins1)
 
 allTeamLossesLabels = []
 for count, each in enumerate(aleTeamLosses):
-    losses1 = customtkinter.CTkLabel(master=tab3, text=each)
+    losses1 = customtkinter.CTkLabel(master=tab3, text=each, font=basicFont)
     losses1.grid(row=count + 3, column=4, columnspan=1, pady=10, padx=3)
     allTeamLossesLabels.append(losses1)
 
 allTeamGbsLabels = []
 for count, each in enumerate(aleTeamGbs):
-    gbs1 = customtkinter.CTkLabel(master=tab3, text=each)
+    gbs1 = customtkinter.CTkLabel(master=tab3, text=each, font=basicFont)
     gbs1.grid(row=count + 3, column=5, columnspan=1, pady=10, padx=3)
     allTeamGbsLabels.append(gbs1)
 
