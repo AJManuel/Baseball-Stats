@@ -14,14 +14,13 @@ import subprocess
 #basic tk setup
 window = customtkinter.CTk()
 
-window.title("The Score")
+window.title("Baseball-Stats")
 
 window.geometry("750x900")
 
 #window.resizable(0,0)
 
 #may only work on mac
-
 def check_appearance():
     """Checks DARK/LIGHT mode of macos."""
     cmd = 'defaults read -g AppleInterfaceStyle'
@@ -30,7 +29,7 @@ def check_appearance():
     return bool(p.communicate()[0])
 customtkinter.set_appearance_mode("System")
 
-def testthing():
+def checkLightDark():
     check_appearance()
     if check_appearance() == True:
         customtkinter.set_default_color_theme('Greengage.json')
@@ -38,11 +37,10 @@ def testthing():
         customtkinter.set_default_color_theme('NeonBanana.json')
     else:
         pass
-testthing()
+checkLightDark()
 
 # customtkinter.set_default_color_theme("Greengage.json")
 x = font.families()
-print(x)
 
 notebook = ttk.Notebook(window)
 tab1 = Frame(notebook)
@@ -125,12 +123,11 @@ def todaySchedule():
                 global awayTeamId
                 theAwayTeamId = haha[thing6]
                 awayTeamId.append(theAwayTeamId)
-        #print(f'{homeTeams} --> {awayTeams}')
 
 todaySchedule()
 
 
-#-----------------standings functions-----------------
+#-----------------Standings functions, for tab 3-----------------
 aleTeamNames = []
 aleTeamWins = []
 aleTeamLosses = []
@@ -270,7 +267,7 @@ def nlWestStandingsFunc():
 nlWestStandingsFunc()
 
 
-#-----------------top5leaders functions-----------------
+#-----------------top5leaders functions, for Tab 2-----------------
 
 top5opsLeadersNames = []
 top5opsLeadersStats = []
@@ -363,7 +360,7 @@ top5savesFunc()
 
 top = ""
 
-#----------------Leaders Page----------------
+#----------------Leaders Page, Tab 2----------------
 statistics = ['AVG', 'OPS', 'RUNS', 'RBI', 'HR', 'WINS', 'ERA', 'SAVES']
 swapStatBox = customtkinter.CTkComboBox(master=tab2, state='readonly', values=statistics)
 swapStatBox.grid(row=0, column=0)
@@ -507,12 +504,13 @@ def swapAllNumbers():
 changeStatButton = customtkinter.CTkButton(master=tab2, text='Update', command=swapAllNumbers, font=basicFont)
 changeStatButton.grid(row=8, column=1, columnspan=2, pady=10, padx=3)
 
+#----------------Matchups Page Button and Child Window, Tab 1-----------------
+
 def open_popup():
     global top
     top = Toplevel(tab2)
-    top.geometry("300x410")
+    top.geometry("350x410")
     top.title("Child_Window")
-    #window.withdraw()
 
 def viewMatchupFunc(t):
     open_popup()
@@ -567,7 +565,6 @@ def viewMatchupFunc(t):
                 for num in range(len(home)):
                     childWindowHomeRoster = customtkinter.CTkLabel(master=top, font=basicFont, text=f'{num + 1}. {home[0 + num]}')
                     childWindowHomeRoster.grid(row=4 + num, column=3)
-                #print(teamName)
                 childWindowLabelAway = customtkinter.CTkLabel(master=top, text=awayTeams[count], font=basicFont)
                 childWindowLabelAway.grid(row=1, column=1)
 
@@ -582,7 +579,6 @@ def viewMatchupFunc(t):
                 for num in range(len(away)):
                     childWindowAwayRoster = customtkinter.CTkLabel(master=top, font=basicFont, text=f'{num + 1}. {away[0 + num]}')
                     childWindowAwayRoster.grid(row=4 + num, column=1)
-                #print(teamName)
     elif matchupButtons[1]:
         homeRoster = statsapi.roster(teamId=homeTeamId[1], season=2024, date=currentDate)
         awayRoster = statsapi.roster(teamId=awayTeamId[1], season=2024, date=currentDate)
@@ -596,8 +592,7 @@ def viewMatchupFunc(t):
                 childWindowLabelAway.grid(row=1, column=1)
     else:
         pass
-#print(tester19)
-#-----------------matchups-----------------
+#-----------------Matchups Page, Tab 1-----------------
 matchupButtons = []
 homeTeamsMatchups = []
 dateLabel = customtkinter.CTkLabel(tab1, text=currentDate, font=bolderFont)
@@ -606,37 +601,28 @@ dateLabel.grid(column=2, row=0)
 for value, each in enumerate(awayTeams):
     awayTeamLabel = customtkinter.CTkLabel(master=tab1, text=each, font=basicFont)
     awayTeamLabel.grid(column=1, row=value + 1, pady=10, padx=3)
-    #print(value)
 
 for value, each in enumerate(awayTeams):
     atLabel = customtkinter.CTkLabel(master=tab1, text="@", font=basicFont)
     atLabel.grid(column=2, row=value + 1, pady=10, padx=3)
-    #print(value)
 
 for count, each in enumerate(homeTeams):
     homeTeamLabel = customtkinter.CTkLabel(master=tab1, text=each, font=basicFont)
     homeTeamLabel.grid(column=3, row=count + 1, pady=10, padx=1)
     eachTeam = homeTeamLabel.cget('text')
     homeTeamsMatchups.append(eachTeam)
-    #print(homeTeamsMatchups)
 
 for amount, each in enumerate(homeTeams):
-    #lambda t= "Button-2 Clicked": get_button(t)
     matchupButton = customtkinter.CTkButton(master=tab1, font=basicFont, text='View Matchup', command=lambda t=homeTeams[amount] : viewMatchupFunc(t))
     matchupButton.grid(column=4, columnspan=2, row=amount + 1, pady=10, padx=5)
     matchupButtons.append(matchupButton)
-    #print(matchupButton)
 
 
-
-
-#-----------------Standings-----------------
+#-----------------Standings Page, Tab 3-----------------
 divisions = ["AL East", 'AL Central', 'AL West', 'NL East', 'NL Central', 'NL West']
-#var = StringVar()
-# swapDivs = customtkinter.CTkComboBox(master=tab3, state='readonly', values=divisions, variable=var)
+
 swapDivs = customtkinter.CTkComboBox(master=tab3, state='readonly', values=divisions, font=basicFont)
 
-# swapDivs.set('AL East')
 swapDivs.grid(row=1, column=3, pady=10, padx=3)
 
 
@@ -658,20 +644,15 @@ def drawAlEastStandings():
     for count, each in enumerate(aleTeamNames):
         allTeamLabels[count].configure(text=each)
         print(each)
-        # team1 = customtkinter.CTkLabel(master=tab3, text=each)
-        # team1.grid(row=count + 3, column=1, columnspan=2, pady=10, padx=3)
 
     for count, each in enumerate(aleTeamWins):
         allTeamWinsLabels[count].configure(text=each)
-        # team1.grid(row=count + 3, column=3, columnspan=1, pady=10, padx=3)
 
     for count, each in enumerate(aleTeamLosses):
         allTeamLossesLabels[count].configure(text=each)
-        # team1.grid(row=count + 3, column=4, columnspan=1, pady=10, padx=3)
 
     for count, each in enumerate(aleTeamGbs):
         allTeamGbsLabels[count].configure(text=each)
-        #team1.grid(row=count + 3, column=5, columnspan=1, pady=10, padx=3)
 
 
 def drawAlCentralStandings():
@@ -683,20 +664,15 @@ def drawAlCentralStandings():
     for count, each in enumerate(alcTeamNames):
         allTeamLabels[count].configure(text=each)
         print(each)
-        # team1 = customtkinter.CTkLabel(master=tab3, text=each)
-        # team1.grid(row=count + 3, column=1, columnspan=2, pady=10, padx=3)
 
     for count, each in enumerate(alcTeamWins):
         allTeamWinsLabels[count].configure(text=each)
-        # team1.grid(row=count + 3, column=3, columnspan=1, pady=10, padx=3)
 
     for count, each in enumerate(alcTeamLosses):
         allTeamLossesLabels[count].configure(text=each)
-        # team1.grid(row=count + 3, column=4, columnspan=1, pady=10, padx=3)
 
     for count, each in enumerate(alcTeamGbs):
         allTeamGbsLabels[count].configure(text=each)
-        #team1.grid(row=count + 3, column=5, columnspan=1, pady=10, padx=3)
 
 def drawAlWestStandings():
     global allTeamLabels
@@ -707,35 +683,15 @@ def drawAlWestStandings():
     for count, each in enumerate(alwTeamNames):
         allTeamLabels[count].configure(text=each)
         print(each)
-        # team1 = customtkinter.CTkLabel(master=tab3, text=each)
-        # team1.grid(row=count + 3, column=1, columnspan=2, pady=10, padx=3)
 
     for count, each in enumerate(alwTeamWins):
         allTeamWinsLabels[count].configure(text=each)
-        # team1.grid(row=count + 3, column=3, columnspan=1, pady=10, padx=3)
 
     for count, each in enumerate(alwTeamLosses):
         allTeamLossesLabels[count].configure(text=each)
-        # team1.grid(row=count + 3, column=4, columnspan=1, pady=10, padx=3)
 
     for count, each in enumerate(alwTeamGbs):
         allTeamGbsLabels[count].configure(text=each)
-        #team1.grid(row=count + 3, column=5, columnspan=1, pady=10, padx=3)
-    # for count, each in enumerate(alwTeamNames):
-    #     team1 = customtkinter.CTkLabel(master=tab3, text=each)
-    #     team1.grid(row=count + 3, column=1, columnspan=2, pady=10, padx=3)
-    #
-    # for count, each in enumerate(alwTeamWins):
-    #     team1 = customtkinter.CTkLabel(master=tab3, text=each)
-    #     team1.grid(row=count + 3, column=3, columnspan=1, pady=10, padx=3)
-    #
-    # for count, each in enumerate(alwTeamLosses):
-    #     team1 = customtkinter.CTkLabel(master=tab3, text=each)
-    #     team1.grid(row=count + 3, column=4, columnspan=1, pady=10, padx=3)
-    #
-    # for count, each in enumerate(alwTeamGbs):
-    #     team1 = customtkinter.CTkLabel(master=tab3, text=each)
-    #     team1.grid(row=count + 3, column=5, columnspan=1, pady=10, padx=3)
 
 
 def drawNlEastStandings():
@@ -747,35 +703,15 @@ def drawNlEastStandings():
     for count, each in enumerate(nleTeamNames):
         allTeamLabels[count].configure(text=each)
         print(each)
-        # team1 = customtkinter.CTkLabel(master=tab3, text=each)
-        # team1.grid(row=count + 3, column=1, columnspan=2, pady=10, padx=3)
 
     for count, each in enumerate(nleTeamWins):
         allTeamWinsLabels[count].configure(text=each)
-        # team1.grid(row=count + 3, column=3, columnspan=1, pady=10, padx=3)
 
     for count, each in enumerate(nleTeamLosses):
         allTeamLossesLabels[count].configure(text=each)
-        # team1.grid(row=count + 3, column=4, columnspan=1, pady=10, padx=3)
 
     for count, each in enumerate(nleTeamGbs):
         allTeamGbsLabels[count].configure(text=each)
-        #team1.grid(row=count + 3, column=5, columnspan=1, pady=10, padx=3)
-    # for count, each in enumerate(nleTeamNames):
-    #     team1 = customtkinter.CTkLabel(master=tab3, text=each)
-    #     team1.grid(row=count + 3, column=1, columnspan=2, pady=10, padx=3)
-    #
-    # for count, each in enumerate(nleTeamWins):
-    #     team1 = customtkinter.CTkLabel(master=tab3, text=each)
-    #     team1.grid(row=count + 3, column=3, columnspan=1, pady=10, padx=3)
-    #
-    # for count, each in enumerate(nleTeamLosses):
-    #     team1 = customtkinter.CTkLabel(master=tab3, text=each)
-    #     team1.grid(row=count + 3, column=4, columnspan=1, pady=10, padx=3)
-    #
-    # for count, each in enumerate(nleTeamGbs):
-    #     team1 = customtkinter.CTkLabel(master=tab3, text=each)
-    #     team1.grid(row=count + 3, column=5, columnspan=1, pady=10, padx=3)
 
 def drawNlCentralStandings():
     global allTeamLabels
@@ -786,35 +722,15 @@ def drawNlCentralStandings():
     for count, each in enumerate(nlcTeamNames):
         allTeamLabels[count].configure(text=each)
         print(each)
-        # team1 = customtkinter.CTkLabel(master=tab3, text=each)
-        # team1.grid(row=count + 3, column=1, columnspan=2, pady=10, padx=3)
 
     for count, each in enumerate(nlcTeamWins):
         allTeamWinsLabels[count].configure(text=each)
-        # team1.grid(row=count + 3, column=3, columnspan=1, pady=10, padx=3)
 
     for count, each in enumerate(nlcTeamLosses):
         allTeamLossesLabels[count].configure(text=each)
-        # team1.grid(row=count + 3, column=4, columnspan=1, pady=10, padx=3)
 
     for count, each in enumerate(nlcTeamGbs):
         allTeamGbsLabels[count].configure(text=each)
-        #team1.grid(row=count + 3, column=5, columnspan=1, pady=10, padx=3)
-    # for count, each in enumerate(nlcTeamNames):
-    #     team1 = customtkinter.CTkLabel(master=tab3, text=each)
-    #     team1.grid(row=count + 3, column=1, columnspan=2, pady=10, padx=3)
-    #
-    # for count, each in enumerate(nlcTeamWins):
-    #     team1 = customtkinter.CTkLabel(master=tab3, text=each)
-    #     team1.grid(row=count + 3, column=3, columnspan=1, pady=10, padx=3)
-    #
-    # for count, each in enumerate(nlcTeamLosses):
-    #     team1 = customtkinter.CTkLabel(master=tab3, text=each)
-    #     team1.grid(row=count + 3, column=4, columnspan=1, pady=10, padx=3)
-    #
-    # for count, each in enumerate(nlcTeamGbs):
-    #     team1 = customtkinter.CTkLabel(master=tab3, text=each)
-    #     team1.grid(row=count + 3, column=5, columnspan=1, pady=10, padx=3)
 
 def drawNlWestStandings():
     global allTeamLabels
@@ -825,37 +741,16 @@ def drawNlWestStandings():
     for count, each in enumerate(nlwTeamNames):
         allTeamLabels[count].configure(text=each)
         print(each)
-        # team1 = customtkinter.CTkLabel(master=tab3, text=each)
-        # team1.grid(row=count + 3, column=1, columnspan=2, pady=10, padx=3)
 
     for count, each in enumerate(nlwTeamWins):
         allTeamWinsLabels[count].configure(text=each)
-        # team1.grid(row=count + 3, column=3, columnspan=1, pady=10, padx=3)
 
     for count, each in enumerate(nlwTeamLosses):
         allTeamLossesLabels[count].configure(text=each)
-        # team1.grid(row=count + 3, column=4, columnspan=1, pady=10, padx=3)
 
     for count, each in enumerate(nlwTeamGbs):
         allTeamGbsLabels[count].configure(text=each)
-        #team1.grid(row=count + 3, column=5, columnspan=1, pady=10, padx=3)
-    # for count, each in enumerate(nlwTeamNames):
-    #     team1 = customtkinter.CTkLabel(master=tab3, text=each)
-    #     team1.grid(row=count + 3, column=1, columnspan=2, pady=10, padx=3)
-    #
-    # for count, each in enumerate(nlwTeamWins):
-    #     team1 = customtkinter.CTkLabel(master=tab3, text=each)
-    #     team1.grid(row=count + 3, column=3, columnspan=1, pady=10, padx=3)
-    #
-    # for count, each in enumerate(nlwTeamLosses):
-    #     team1 = customtkinter.CTkLabel(master=tab3, text=each)
-    #     team1.grid(row=count + 3, column=4, columnspan=1, pady=10, padx=3)
-    #
-    # for count, each in enumerate(nlwTeamGbs):
-    #     team1 = customtkinter.CTkLabel(master=tab3, text=each)
-    #     team1.grid(row=count + 3, column=5, columnspan=1, pady=10, padx=3)
 
-# def swapAllStats(*args):
 def swapAllStats():
     currentDiv = swapDivs.get()
     print(currentDiv)
@@ -901,9 +796,6 @@ for count, each in enumerate(aleTeamGbs):
     gbs1.grid(row=count + 3, column=5, columnspan=1, pady=10, padx=3)
     allTeamGbsLabels.append(gbs1)
 
-#var.trace('w', swapAllStats)
-#swapAllStats()
-#swapDivs.bind("<<ComboboxSelected>>", swapAllStats())
 
 # add quit button
 #quit_button = tk.Button(tab1, text='Quit', command=quitWindow).grid(row=10, column=2, sticky='n')
